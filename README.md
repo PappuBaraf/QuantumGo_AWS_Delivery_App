@@ -1,130 +1,451 @@
-# AWS Project - Build a Full End-to-End Web Application with 7 Services | Step-by-Step Tutorial
+<div align="center">
 
-This repo contains the code files used in this [YouTube video](https://youtu.be/K6v6t5z6AsU).
+# 🚚 QuantumGo – AWS Delivery App
 
-## TL;DR
-We're creating a web application for a unicorn ride-sharing service called Wild Rydes (from the original [Amazon workshop](https://aws.amazon.com/serverless-workshops)).  The app uses IAM, Amplify, Cognito, Lambda, API Gateway and DynamoDB, with code stored in GitHub and incorporated into a CI/CD pipeline with Amplify.
+### ☁️ Cloud-Native Delivery Management Platform
 
-The app will let you create an account and log in, then request a ride by clicking on a map (powered by ArcGIS).  The code can also be extended to build out more functionality.
+<p align="center">
+An intelligent cloud-based delivery application built using AWS cloud services and modern full-stack technologies. The platform enables secure user authentication, real-time order management, scalable backend services, and responsive web interfaces.
+</p>
 
-## Cost
-All services used are eligible for the [AWS Free Tier](https://aws.amazon.com/free/).  Outside of the Free Tier, there may be small charges associated with building the app (less than $1 USD), but charges will continue to incur if you leave the app running.  Please see the end of the YouTube video for instructions on how to delete all resources used in the video.
+<p>
 
-## The Application Code
-The application code is here in this repository.
+<img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=FF9900"/>
 
-## The Lambda Function Code
-Here is the code for the Lambda function, originally taken from the [AWS workshop](https://aws.amazon.com/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/module-3/ ), and updated for Node 20.x:
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
 
-```node
-import { randomBytes } from 'crypto';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
 
-const client = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(client);
+<img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white"/>
 
-const fleet = [
-    { Name: 'Angel', Color: 'White', Gender: 'Female' },
-    { Name: 'Gil', Color: 'White', Gender: 'Male' },
-    { Name: 'Rocinante', Color: 'Yellow', Gender: 'Female' },
-];
+<img src="https://img.shields.io/badge/AWS%20Amplify-FF9900?style=for-the-badge&logo=awsamplify&logoColor=white"/>
 
-export const handler = async (event, context) => {
-    if (!event.requestContext.authorizer) {
-        return errorResponse('Authorization not configured', context.awsRequestId);
-    }
+<img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"/>
 
-    const rideId = toUrlString(randomBytes(16));
-    console.log('Received event (', rideId, '): ', event);
+<img src="https://img.shields.io/badge/Amazon%20Cognito-DD344C?style=for-the-badge"/>
 
-    const username = event.requestContext.authorizer.claims['cognito:username'];
-    const requestBody = JSON.parse(event.body);
-    const pickupLocation = requestBody.PickupLocation;
+<img src="https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge"/>
 
-    const unicorn = findUnicorn(pickupLocation);
+<img src="https://img.shields.io/badge/API%20Gateway-FF4F8B?style=for-the-badge"/>
 
-    try {
-        await recordRide(rideId, username, unicorn);
-        return {
-            statusCode: 201,
-            body: JSON.stringify({
-                RideId: rideId,
-                Unicorn: unicorn,
-                Eta: '30 seconds',
-                Rider: username,
-            }),
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-        };
-    } catch (err) {
-        console.error(err);
-        return errorResponse(err.message, context.awsRequestId);
-    }
-};
+<img src="https://img.shields.io/badge/DynamoDB-4053D6?style=for-the-badge"/>
 
-function findUnicorn(pickupLocation) {
-    console.log('Finding unicorn for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);
-    return fleet[Math.floor(Math.random() * fleet.length)];
-}
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
 
-async function recordRide(rideId, username, unicorn) {
-    const params = {
-        TableName: 'Rides',
-        Item: {
-            RideId: rideId,
-            User: username,
-            Unicorn: unicorn,
-            RequestTime: new Date().toISOString(),
-        },
-    };
-    await ddb.send(new PutCommand(params));
-}
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
 
-function toUrlString(buffer) {
-    return buffer.toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '');
-}
+</p>
 
-function errorResponse(errorMessage, awsRequestId) {
-    return {
-        statusCode: 500,
-        body: JSON.stringify({
-            Error: errorMessage,
-            Reference: awsRequestId,
-        }),
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-        },
-    };
-}
+<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=24&pause=1000&color=36BCF7&center=true&vCenter=true&width=900&lines=AWS+Cloud+Project;React+Full+Stack+Application;Delivery+Management+System;Cloud+Native+Architecture;Serverless+Application;Scalable+Web+Platform" />
+
+</div>
+
+---
+
+# 📖 About the Project
+
+**QuantumGo** is a cloud-native delivery management application designed to demonstrate modern AWS architecture and full-stack web development.
+
+The project provides secure authentication, scalable APIs, cloud storage, order management, delivery tracking, and responsive dashboards using AWS managed services.
+
+This repository showcases practical cloud computing skills and serverless application development.
+
+---
+
+# 🎯 Objectives
+
+- Build a cloud-native delivery platform
+- Learn AWS cloud services
+- Implement secure authentication
+- Develop REST APIs
+- Manage delivery orders
+- Store cloud-based data
+- Deploy scalable applications
+- Practice DevOps workflows
+- Understand serverless architecture
+
+---
+
+# ☁️ AWS Services Used
+
+| AWS Service | Purpose |
+|-------------|----------|
+| AWS Amplify | Frontend Hosting |
+| Amazon Cognito | User Authentication |
+| Amazon S3 | File Storage |
+| AWS Lambda | Serverless Backend |
+| API Gateway | REST APIs |
+| DynamoDB | NoSQL Database |
+| Amazon RDS | SQL Database |
+| IAM | Security & Permissions |
+| CloudWatch | Monitoring |
+| CloudFront | Global Content Delivery |
+
+---
+
+# 💻 Technologies Used
+
+| Technology | Purpose |
+|------------|----------|
+| React.js | Frontend |
+| Node.js | Backend |
+| Express.js | REST API |
+| JavaScript | Programming |
+| HTML5 | Structure |
+| CSS3 | Styling |
+| Bootstrap | Responsive UI |
+| AWS SDK | Cloud Integration |
+| Git | Version Control |
+| GitHub | Source Code Hosting |
+
+---
+
+# 🏗 System Architecture
+
+```
+User
+
+   │
+
+React Frontend
+
+   │
+
+AWS Amplify
+
+   │
+
+API Gateway
+
+   │
+
+AWS Lambda
+
+   │
+
+DynamoDB / Amazon RDS
+
+   │
+
+Amazon S3
+
 ```
 
-## The Lambda Function Test Function
-Here is the code used to test the Lambda function:
+---
 
-```json
-{
-    "path": "/ride",
-    "httpMethod": "POST",
-    "headers": {
-        "Accept": "*/*",
-        "Authorization": "eyJraWQiOiJLTzRVMWZs",
-        "content-type": "application/json; charset=UTF-8"
-    },
-    "queryStringParameters": null,
-    "pathParameters": null,
-    "requestContext": {
-        "authorizer": {
-            "claims": {
-                "cognito:username": "the_username"
-            }
-        }
-    },
-    "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
-}
+# 📂 Project Structure
+
+```
+quantumgo-aws-delivery-app
+
+│
+
+├── frontend
+
+├── backend
+
+├── aws
+
+├── api
+
+├── authentication
+
+├── delivery
+
+├── database
+
+├── assets
+
+├── screenshots
+
+├── documentation
+
+└── README.md
 ```
 
+---
+
+# 🚀 Features
+
+✅ User Registration
+
+✅ Secure Login
+
+✅ Amazon Cognito Authentication
+
+✅ Delivery Dashboard
+
+✅ Order Management
+
+✅ Package Tracking
+
+✅ Customer Dashboard
+
+✅ Driver Dashboard
+
+✅ Responsive UI
+
+✅ REST API
+
+✅ Serverless Backend
+
+✅ Cloud Storage
+
+✅ File Upload
+
+✅ Authentication & Authorization
+
+✅ AWS Deployment
+
+✅ Cloud Monitoring
+
+✅ Secure IAM Roles
+
+---
+
+# 📦 Core Modules
+
+### 👤 Authentication
+
+- User Login
+- User Registration
+- Password Recovery
+- JWT Authentication
+
+---
+
+### 📦 Order Management
+
+- Create Orders
+- Update Orders
+- Delete Orders
+- View Orders
+
+---
+
+### 🚚 Delivery Tracking
+
+- Delivery Status
+- Order History
+- Driver Assignment
+- Live Updates
+
+---
+
+### 📁 File Management
+
+- Upload Images
+- Store Files in S3
+- Retrieve Files
+
+---
+
+### ☁ Cloud Services
+
+- Serverless Functions
+- API Gateway
+- Cognito
+- DynamoDB
+- Amplify Hosting
+
+---
+
+# 📸 Screenshots
+
+Create a folder
+
+```
+Screenshots/
+
+home.png
+
+login.png
+
+dashboard.png
+
+orders.png
+
+tracking.png
+
+admin.png
+```
+
+Example
+
+```markdown
+## Home
+
+![Home](Screenshots/home.png)
+
+## Dashboard
+
+![Dashboard](Screenshots/dashboard.png)
+
+## Orders
+
+![Orders](Screenshots/orders.png)
+```
+
+---
+
+# 🚀 Getting Started
+
+Clone Repository
+
+```bash
+git clone https://github.com/PappuBaraf/quantumgo-aws-delivery-app.git
+```
+
+Move into project
+
+```bash
+cd quantumgo-aws-delivery-app
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run frontend
+
+```bash
+npm start
+```
+
+Run backend
+
+```bash
+npm run server
+```
+
+Build production
+
+```bash
+npm run build
+```
+
+Deploy using AWS Amplify
+
+```bash
+amplify publish
+```
+
+---
+
+# 📚 Learning Outcomes
+
+- AWS Cloud Fundamentals
+- React Development
+- Node.js Backend
+- REST API Development
+- Serverless Computing
+- Authentication
+- Cloud Deployment
+- API Gateway
+- Lambda Functions
+- DynamoDB
+- Amazon S3
+- IAM Security
+- Cloud Monitoring
+- Git & GitHub
+
+---
+
+# 💼 Applications
+
+This project demonstrates skills relevant to
+
+- AWS Cloud Engineer
+- Cloud Developer
+- Full Stack Developer
+- React Developer
+- Backend Developer
+- DevOps Engineer
+- Software Engineer
+- Cloud Architect
+- AICTE & AWS Internship Projects
+- Technical Portfolio
+
+---
+
+# 🎓 Academic Information
+
+**Degree**
+
+Bachelor of Engineering (B.E.)
+
+Computer Science & Engineering (Artificial Intelligence & Machine Learning)
+
+**Project Type**
+
+AWS Cloud Computing Project
+
+Cloud-Based Delivery Management System
+
+University of Mumbai
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork Repository
+
+2. Create Feature Branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit
+
+```bash
+git commit -m "Added new feature"
+```
+
+4. Push
+
+```bash
+git push origin feature-name
+```
+
+5. Create Pull Request
+
+---
+
+# ⭐ Support
+
+If this repository helped you,
+
+⭐ Star the repository
+
+🍴 Fork the repository
+
+📢 Share with others
+
+---
+
+# 👨‍💻 Author
+
+## Pappu Ramesh Baraf
+
+🎓 BE Computer Science & Engineering (AI & ML)
+
+☁ AWS | ⚛ React | 💻 Full Stack | 🤖 AI | 📊 Machine Learning
+
+GitHub
+
+https://github.com/PappuBaraf
+
+---
+
+<div align="center">
+
+# 🚀 Build Once, Deploy Everywhere ☁️
+
+### Made with ❤️ by Pappu Baraf
+
+</div>
